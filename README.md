@@ -29,9 +29,9 @@ FROM_CALL>APRS::TO_CALL  :your_message_text{001
 
 # Current features implemented partly or in full
 
-*Sending a message to a user
-*Sending a bulletin, group bulletin, or annoucement
-*Sending a status with or without a zulu timestamp
-*Sending a user-defined packet
+*Sending a message to a user<br>
+*Sending a bulletin, group bulletin, or annoucement<br>
+*Sending a status with or without a zulu timestamp<br>
+*Sending a user-defined packet<br>
 
 I've tried to ensure that implemented features adhear to APRS101 spec following guidelines for formatting and enforcing valid packets with padding and truncating of user-input.
