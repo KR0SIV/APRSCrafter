@@ -44,13 +44,4 @@ class aprscrafter:
             zt = re.findall("\d{6}", str(dt))
             return fromcall.upper() + '>APRS:>' + zt[0] + 'z' + statustext
 
-    def udd(self, fromcall, packettype, userdata, *tocall):  #user-defined data format using experimental designator {{ as per APRS101 Page 87
-        if len(packettype) > 1:
-            raise Exception("Packet type identifier must only be 1 character!")
-        else:
-            pass
-        if not tocall:
-            tocall = ''
-        else:
-            tocall = str(tocall[0])
-        return fromcall.upper() + '>APRS:>' + tocall.upper() + '{{' + packettype + userdata
+aprsc = aprscrafter()
