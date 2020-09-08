@@ -1,7 +1,34 @@
 import zulu
 import re
+import time
+
 
 class aprscrafter:
+
+    def parsemsg(self, rawmsg):  # PARSE Doesn't Understand Non-Message Types or Messages that include location data
+        msg = rawmsg.decode("utf-8")
+        sendingcall = re.findall("\A(.*)(?:>)", msg)[0]
+        tocall = re.findall("(?:::)(.*)(?::)", msg)[0].strip()
+        fullmessage = re.findall("(?:::)(?:.{10})(.*)", msg)[
+            0]  # captures full message including ack string which must be handled.
+
+        if "{" in fullmessage:
+            msg = re.findall("(.*)(?:{)", fullmessage)[0]
+            msgID = re.findall("(?:{)(.*)", fullmessage)[0]
+            rxack = ""
+            # print("msgID: " + msgID)
+        elif "ack" in fullmessage:
+            rxack = fullmessage
+            msgID = ""
+            # print("rxack: " + rxack)
+        else:
+            msg = fullmessage
+            msgID = ""
+            rxack = ""
+
+        array = (sendingcall + "," + tocall + "," + msg + "," + msgID + "," + rxack).split(
+            ",")  # Creates an array starting at 0 containing all components of a message
+        return array
 
     def padCall(self, callsign):    #Pads a callsign to 9 spaces, truncates if longer. APRS101 Chapter 14 Messages
         padded = callsign.ljust(9)
@@ -43,5 +70,30 @@ class aprscrafter:
             dt = zulu.parse(zulu.now())
             zt = re.findall("\d{6}", str(dt))
             return fromcall.upper() + '>APRS:>' + zt[0] + 'z' + statustext
+
+    class parser:
+        def sendcall(self, rawmsg):
+            msg = rawmsg.decode("utf-8")
+            return re.findall("\A(.*)(?:>)", msg)[0]
+
+        def fromcall(self, rawmsg):
+            msg = rawmsg.decode("utf-8")
+            return re.findall("(?:::)(.*)(?::)", msg)[0].strip()
+
+
+        def message(self, rawmsg):
+            msg = rawmsg.decode("utf-8")
+            fullmessage = re.findall("(?:::)(?:.{10})(.*)", msg)[0]
+            if "ack" in fullmessage:
+                return ""
+            elif "{" in fullmessage:
+                return re.findall("(.*)(?:{)", fullmessage)[0]
+            return ""
+
+        def rxack(self, rawmsg):
+            pass
+
+        def ack(self, rawmsg):
+            pass
 
 aprsc = aprscrafter()
